@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Class 8 – Gyanpeeth</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9fafc;
+    }
+
+    header {
+      background-color: #2d2dff;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .back-link {
+      background: white;
+      color: #2d2dff;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h2 {
+      color: #2d2dff;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .card {
+      background-color: #fff;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: 0.3s;
+      min-width: 180px;
+    }
+
+    .card:hover {
+      background-color: #eaeaff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #2d2dff;
+      color: white;
+      margin-top: 3rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Class 8 – Gyanpeeth</div>
+  <a class="back-link" href="dashboard.html">← Back</a>
+</header>
+
+<main>
+  <h2 id="main-title">Select Subject</h2>
+
+  <button id="back-to-subjects" onclick="goBackToSubjects()" class="hidden">← Back to Subjects</button>
+  <button id="back-to-types" onclick="goBackToTypes()" class="hidden">← Back to Content Types</button>
+
+  <!-- Subject List -->
+  <div id="subject-list" class="grid">
+    <div class="card" onclick="selectSubject('English')">English</div>
+    <div class="card" onclick="selectSubject('Nepali')">Nepali</div>
+    <div class="card" onclick="selectSubject('Mathematics')">Mathematics</div>
+    <div class="card" onclick="selectSubject('Science')">Science</div>
+    <div class="card" onclick="selectSubject('Social')">Social</div>
+  </div>
+
+  <!-- Content Type List -->
+  <div id="content-type-list" class="grid hidden"></div>
+
+  <!-- Chapter List -->
+  <div id="chapter-list" class="grid hidden"></div>
+</main>
+
+<footer>
+  <p>&copy; 2025 Gyanpeeth. All rights reserved.</p>
+</footer>
+
+<script>
+  const subjects = ['English', 'Nepali', 'Mathematics', 'Science', 'Social'];
+  const contentTypes = ['Textbook', 'Chapter-wise Notes', 'Chapter-wise Video Lectures', 'Chapter-wise Questions', 'Chapter-wise Solutions'];
+  const chapters = [
+    'Chapter 1: Introduction',
+    'Chapter 2: Basic Concepts',
+    'Chapter 3: Practice',
+    'Chapter 4: Summary',
+    'Chapter 5: Revision'
+  ];
+
+  let selectedSubject = '';
+  let selectedContentType = '';
+
+  function selectSubject(subject) {
+    selectedSubject = subject;
+    document.getElementById('main-title').innerText = `${subject} – Select Content Type`;
+    document.getElementById('subject-list').classList.add('hidden');
+    document.getElementById('back-to-subjects').classList.remove('hidden');
+
+    const container = document.getElementById('content-type-list');
+    container.innerHTML = '';
+    contentTypes.forEach(type => {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerText = type;
+      div.onclick = () => selectContentType(type);
+      container.appendChild(div);
+    });
+    container.classList.remove('hidden');
+  }
+
+  function selectContentType(type) {
+    selectedContentType = type;
+    document.getElementById('main-title').innerText = `${selectedSubject} – ${type} – Chapters`;
+    document.getElementById('content-type-list').classList.add('hidden');
+    document.getElementById('back-to-types').classList.remove('hidden');
+
+    const container = document.getElementById('chapter-list');
+    container.innerHTML = '';
+    chapters.forEach((chapter, index) => {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerText = chapter;
+      div.onclick = () => {
+        const subject = selectedSubject.toLowerCase();
+        const type = selectedContentType.toLowerCase().replace(/ /g, '-');
+        const chapterPage = `content/${subject}/${type}/chapter${index + 1}.html`;
+        window.location.href = chapterPage;
+      };
+      container.appendChild(div);
+    });
+    container.classList.remove('hidden');
+  }
+
+  function goBackToSubjects() {
+    document.getElementById('main-title').innerText = "Select Subject";
+    document.getElementById('subject-list').classList.remove('hidden');
+    document.getElementById('content-type-list').classList.add('hidden');
+    document.getElementById('chapter-list').classList.add('hidden');
+    document.getElementById('back-to-subjects').classList.add('hidden');
+    document.getElementById('back-to-types').classList.add('hidden');
+  }
+
+  function goBackToTypes() {
+    document.getElementById('main-title').innerText = `${selectedSubject} – Select Content Type`;
+    document.getElementById('content-type-list').classList.remove('hidden');
+    document.getElementById('chapter-list').classList.add('hidden');
+    document.getElementById('back-to-types').classList.add('hidden');
+  }
+</script>
+
+</body>
+</html>
+

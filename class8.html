@@ -29,6 +29,7 @@
       box-shadow: 0 3px 15px rgba(45, 45, 255, 0.4);
       font-weight: 600;
       font-size: 1.5rem;
+      user-select: none;
     }
     .logo {
       display: flex;
@@ -47,6 +48,7 @@
       text-decoration: none;
       box-shadow: 0 0 10px rgba(45, 45, 255, 0.25);
       transition: background-color 0.3s ease;
+      user-select: none;
     }
     .back-link:hover {
       background: #d3d3ff;
@@ -64,6 +66,7 @@
       flex-direction: column;
       justify-content: center;
       animation: fadeIn 1s ease forwards;
+      user-select: none;
     }
     h2 {
       color: #2d2dff;
@@ -230,44 +233,58 @@
     contentTypes.forEach(type => {
       const div = document.createElement('div');
       div.className = 'card';
-      div.innerHTML = `<span>${type}</span>`;
-      div.onclick = () => selectContentType(type);
+
+      // If Textbook, open google drive link directly
+      if(type === 'Textbook'){
+        div.innerHTML = `<span>${type}</span>`;
+        div.style.cursor = 'pointer';
+
+        // You can customize the link per subject here if you want
+        let driveLink = '';
+
+        if(subject === 'Mathematics'){
+          driveLink = 'https://drive.google.com/file/d/15IiMN29Dn3lK2GRrD2CJfScxfXjTnNxO/view?usp=sharing';
+        } else {
+          driveLink = 'https://drive.google.com'; // fallback or other subject links
+        }
+
+        div.onclick = () => {
+          window.open(driveLink, '_blank');
+        };
+      } else {
+        div.innerHTML = `<span>${type}</span>`;
+        div.onclick = () => selectContentType(type);
+      }
+
+      container.appendChild(div);
+    });
+    container.classList.remove('hidden');
+    document.getElementById('chapter-list').classList.add('hidden');
+    document.getElementById('back-to-types').classList.add('hidden');
+  }
+
+  function selectContentType(type) {
+    selectedContentType = type;
+    document.getElementById('main-title').innerText = `${selectedSubject} – ${type} – Chapters`;
+    document.getElementById('content-type-list').classList.add('hidden');
+    document.getElementById('back-to-types').classList.remove('hidden');
+
+    const container = document.getElementById('chapter-list');
+    container.innerHTML = '';
+    chapters.forEach((chapter, index) => {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerText = chapter;
+      div.onclick = () => {
+        const subject = selectedSubject.toLowerCase();
+        const typeSlug = selectedContentType.toLowerCase().replace(/ /g, '-');
+        const chapterPage = `content/${subject}/${typeSlug}/chapter${index + 1}.html`;
+        window.location.href = chapterPage;
+      };
       container.appendChild(div);
     });
     container.classList.remove('hidden');
   }
-
- function selectContentType(type) {
-  selectedContentType = type;
-
-  // Check if user selected Textbook AND subject is Mathematics
-  if (type === 'Textbook' && selectedSubject === 'Mathematics') {
-    // Open Google Drive textbook for Class 8 Mathematics
-    window.open('https://drive.google.com/file/d/15IiMN29Dn3lK2GRrD2CJfScxfXjTnNxO/view?usp=sharing', '_blank');
-    return; // Stop further processing
-  }
-
-  // For other cases, show chapters normally
-  document.getElementById('main-title').innerText = `${selectedSubject} – ${type} – Chapters`;
-  document.getElementById('content-type-list').classList.add('hidden');
-  document.getElementById('back-to-types').classList.remove('hidden');
-
-  const container = document.getElementById('chapter-list');
-  container.innerHTML = '';
-  chapters.forEach((chapter, index) => {
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.innerText = chapter;
-    div.onclick = () => {
-      const subject = selectedSubject.toLowerCase();
-      const typeSlug = selectedContentType.toLowerCase().replace(/ /g, '-');
-      const chapterPage = `content/${subject}/${typeSlug}/chapter${index + 1}.html`;
-      window.location.href = chapterPage;
-    };
-    container.appendChild(div);
-  });
-  container.classList.remove('hidden');
-}
 
   function goBackToSubjects() {
     document.getElementById('main-title').innerText = 'Select Subject';

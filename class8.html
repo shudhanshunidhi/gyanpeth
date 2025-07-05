@@ -268,13 +268,23 @@
 
   // If it's textbook and Mathematics is selected
   if (type === 'Textbook') {
-    if (selectedSubject === 'Mathematics') {
-      window.open('https://drive.google.com/file/d/15IiMN29Dn3lK2GRrD2CJfScxfXjTnNxO/view?usp=sharing', '_blank');
-    } else {
-      alert(`No textbook link provided for ${selectedSubject}.`);
-    }
-    return; // Do not continue to chapter list
+  const textbookLinks = {
+    'Mathematics': 'https://drive.google.com/file/d/15IiMN29Dn3lK2GRrD2CJfScxfXjTnNxO/view?usp=sharing',
+    'English': 'https://drive.google.com/file/d/16U3ql8p-bzswYQ_fUB3yKRgYepk3awVm/view?usp=sharing',
+    'Nepali': 'https://drive.google.com/file/d/1VhWXN5D6qBQx1REalFLXFlvRHJJTwebD/view?usp=sharing',
+    'Science': 'https://drive.google.com/file/d/1mOY7RSw_1cAX9UMfJMd9ZlZ2WKzUoluJ/view?usp=sharing',
+    'Social': 'https://drive.google.com/file/d/1-qzA9cru-kidQDK9Kn2hRK6iEsbkRDkO/view?usp=sharing'
+  };
+
+  const link = textbookLinks[selectedSubject];
+  if (link) {
+    window.open(link, '_blank');
+  } else {
+    alert(`No textbook link available for ${selectedSubject}.`);
   }
+  return;
+}
+
 
   document.getElementById('main-title').innerText = `${selectedSubject} – ${type} – Chapters`;
   document.getElementById('content-type-list').classList.add('hidden');

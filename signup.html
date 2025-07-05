@@ -62,25 +62,25 @@
     <a href="login.html">Already have an account? Login</a>
   </div>
 
-  <script type="module" src="firebase.js"></script>
-  <script type="module">
-    import { auth } from './firebase.js';
-    import { createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+<script type="module" src="firebase.js"></script>
+<script type="module">
+  import { auth } from './firebase.js';
+  import { createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
 
-    window.signUp = function () {
-      const email = document.getElementById('signup-email').value;
-      const password = document.getElementById('signup-password').value;
+  window.signUp = function () {
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
 
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          alert('Signup successful! Redirecting...');
-          window.location.href = 'dashboard.html';
-        })
-        .catch(error => {
-          alert(error.message);
-        });
-    }
-  </script>
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        alert('Signup successful!');
+        window.location.href = 'dashboard.html'; // or any success page
+      })
+      .catch(error => {
+        alert('Error: ' + error.message);
+      });
+  }
+</script>
 </body>
 </html>
 

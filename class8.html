@@ -264,27 +264,38 @@
   }
 
   function selectContentType(type) {
-    selectedContentType = type;
-    document.getElementById('main-title').innerText = `${selectedSubject} – ${type} – Chapters`;
-    document.getElementById('content-type-list').classList.add('hidden');
-    document.getElementById('back-to-types').classList.remove('hidden');
+  selectedContentType = type;
 
-    const container = document.getElementById('chapter-list');
-    container.innerHTML = '';
-    chapters.forEach((chapter, index) => {
-      const div = document.createElement('div');
-      div.className = 'card';
-      div.innerText = chapter;
-      div.onclick = () => {
-        const subject = selectedSubject.toLowerCase();
-        const typeSlug = selectedContentType.toLowerCase().replace(/ /g, '-');
-        const chapterPage = `content/${subject}/${typeSlug}/chapter${index + 1}.html`;
-        window.location.href = chapterPage;
-      };
-      container.appendChild(div);
-    });
-    container.classList.remove('hidden');
+  // If it's textbook and Mathematics is selected
+  if (type === 'Textbook') {
+    if (selectedSubject === 'Mathematics') {
+      window.open('https://drive.google.com/file/d/15IiMN29Dn3lK2GRrD2CJfScxfXjTnNxO/view?usp=sharing', '_blank');
+    } else {
+      alert(`No textbook link provided for ${selectedSubject}.`);
+    }
+    return; // Do not continue to chapter list
   }
+
+  document.getElementById('main-title').innerText = `${selectedSubject} – ${type} – Chapters`;
+  document.getElementById('content-type-list').classList.add('hidden');
+  document.getElementById('back-to-types').classList.remove('hidden');
+
+  const container = document.getElementById('chapter-list');
+  container.innerHTML = '';
+  chapters.forEach((chapter, index) => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerText = chapter;
+    div.onclick = () => {
+      const subject = selectedSubject.toLowerCase();
+      const typeSlug = selectedContentType.toLowerCase().replace(/ /g, '-');
+      const chapterPage = `content/${subject}/${typeSlug}/chapter${index + 1}.html`;
+      window.location.href = chapterPage;
+    };
+    container.appendChild(div);
+  });
+  container.classList.remove('hidden');
+}
 
   function goBackToSubjects() {
     document.getElementById('main-title').innerText = 'Select Subject';

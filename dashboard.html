@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard – Gyanpeeth</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #2d2dff;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .logout-btn {
+      background: white;
+      color: #2d2dff;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #2d2dff;
+      margin-bottom: 1rem;
+    }
+
+    .class-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .class-links a {
+      text-decoration: none;
+      background: #ffffff;
+      color: #2d2dff;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+
+    .class-links a:hover {
+      background: #e6e6ff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #2d2dff;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">Gyanpeeth Dashboard</div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </header>
+
+  <main>
+    <h1>Welcome to Gyanpeeth!</h1>
+    <p>Select your class to continue learning:</p>
+
+    <div class="class-links">
+      <a href="class8.html">Class 8</a>
+      <a href="class9.html">Class 9</a>
+      <a href="class10.html">Class 10</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Gyanpeeth. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function logout() {
+      alert("Logout functionality coming soon!");
+      // Later: Use Firebase auth signOut()
+      // signOut(auth).then(() => window.location.href = 'login.html');
+    }
+  </script>
+
+</body>
+</html>
+

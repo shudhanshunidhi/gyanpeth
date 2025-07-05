@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up – Gyanpeeth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      background: #f0f2f5;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .signup-box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    h2 {
+      color: #2d2dff;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #2d2dff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1e1ef0;
+    }
+    a {
+      display: block;
+      margin-top: 15px;
+      color: #2d2dff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-box">
+    <h2>Sign Up</h2>
+    <input type="email" id="signup-email" placeholder="Email" required>
+    <input type="password" id="signup-password" placeholder="Password" required>
+    <button onclick="signUp()">Register</button>
+    <a href="login.html">Already have an account? Login</a>
+  </div>
+
+  <script type="module" src="firebase.js"></script>
+  <script type="module">
+    import { auth } from './firebase.js';
+    import { createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+
+    window.signUp = function () {
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          alert('Signup successful! Redirecting...');
+          window.location.href = 'dashboard.html';
+        })
+        .catch(error => {
+          alert(error.message);
+        });
+    }
+  </script>
+</body>
+</html>
+

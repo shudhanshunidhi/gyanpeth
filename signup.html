@@ -67,30 +67,32 @@
     <button onclick="signUp()">Register</button>
     <a href="login.html">Already have an account? Login</a>
   </div>
+<!-- Firebase config import -->
+<script type="module" src="firebase.js"></script>
 
-  <script type="module" src="firebase.js"></script>
-  <script type="module">
-    import { auth } from './firebase.js';
-    import { createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+<!-- Sign Up logic -->
+<script type="module">
+  import { auth } from './firebase.js';
+  import { createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
 
-    window.signUp = function () {
-      const email = document.getElementById('signup-email').value.trim();
-      const password = document.getElementById('signup-password').value.trim();
+  window.signUp = function () {
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value.trim();
 
-      if (!email || !password) {
-        alert('Please enter both email and password.');
-        return;
-      }
-
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          alert('Signup successful!');
-          window.location.href = 'dashboard.html'; // Or your desired page
-        })
-        .catch(error => {
-          alert('Error: ' + error.message);
-        });
+    if (!email || !password) {
+      alert('Please enter both email and password.');
+      return;
     }
-  </script>
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        alert('Signup successful!');
+        window.location.href = 'dashboard.html';
+      })
+      .catch(error => {
+        alert('Error: ' + error.message);
+      });
+  }
+</script>
 </body>
 </html>

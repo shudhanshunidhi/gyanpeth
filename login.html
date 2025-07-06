@@ -1,88 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login – Gyanpeeth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f6f8;
+      background: #f0f2f5;
+      font-family: Arial, sans-serif;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
-      margin: 0;
     }
-    .login-container {
+    .login-box {
       background: white;
-      padding: 2rem 3rem;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      text-align: center;
-      width: 320px;
-    }
-    input[type="text"], input[type="password"] {
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
       width: 100%;
-      padding: 0.6rem;
-      margin: 0.6rem 0 1.2rem 0;
-      border: 1px solid #ccc;
+      max-width: 400px;
+      text-align: center;
+    }
+    h2 {
+      color: #2d2dff;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
       border-radius: 6px;
-      font-size: 1rem;
+      border: 1px solid #ccc;
     }
     button {
       width: 100%;
-      padding: 0.7rem;
-      font-size: 1.1rem;
+      padding: 12px;
       background-color: #2d2dff;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
+      font-weight: bold;
+      margin-top: 15px;
       cursor: pointer;
-      font-weight: 600;
-      transition: background-color 0.3s ease;
     }
     button:hover {
       background-color: #1e1ef0;
     }
-    .error {
-      color: red;
-      margin-top: 0.5rem;
-      font-size: 0.9rem;
-      display: none;
+    a {
+      display: block;
+      margin-top: 15px;
+      color: #2d2dff;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-
-  <div class="login-container">
-    <h2>Login to Gyanpeeth</h2>
-    <input type="text" id="username" placeholder="Username" autocomplete="off" />
-    <input type="password" id="password" placeholder="Password" autocomplete="off" />
+  <div class="login-box">
+    <h2>Login</h2>
+    <input type="email" id="login-email" placeholder="Email" required>
+    <input type="password" id="login-password" placeholder="Password" required>
     <button onclick="login()">Login</button>
-    <div class="error" id="error-msg">Invalid username or password</div>
+    <a href="signup.html">Don't have an account? Sign up</a>
   </div>
 
-  <script>
-    // For demo: simple fixed username/password check
-    const correctUsername = "student";
-    const correctPassword = "password123";
+  <script type="module" src="firebase.js"></script>
+  <script type="module">
+    import { auth } from './firebase.js';
+    import { signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
 
-    function login() {
-      const user = document.getElementById('username').value.trim();
-      const pass = document.getElementById('password').value.trim();
-      const errorMsg = document.getElementById('error-msg');
+    window.login = function () {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
 
-      if(user === correctUsername && pass === correctPassword) {
-        // Save login status
-        localStorage.setItem("isLoggedIn", "true");
-        // Redirect to dashboard
-        window.location.href = "dashboard.html";
-      } else {
-        errorMsg.style.display = "block";
-      }
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          alert('Login successful! Redirecting...');
+          window.location.href = 'dashboard.html'; // Create this later
+        })
+        .catch(error => {
+          alert('Error: ' + error.message);
+        });
     }
   </script>
-
 </body>
 </html>

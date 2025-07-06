@@ -109,10 +109,9 @@
 
   <script>
     function logout() {
-      alert("Logout functionality coming soon!");
-      // Later: Use Firebase auth signOut()
-      // signOut(auth).then(() => window.location.href = 'login.html');
-    }
+    localStorage.removeItem("isLoggedIn");
+    window.location.href = "login.html";
+  }
   </script>
 
 </body>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Class 10 – Gyanpeeth</title>
+  <title>Class 9 – Gyanpeeth</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     * {
@@ -79,7 +79,7 @@
       gap: 12px;
     }
     h2::before {
-      content: '\1F4DA';
+      content: '📚';
       font-size: 1.8rem;
     }
     .grid {
@@ -117,6 +117,23 @@
       color: #333;
       font-size: 1.1rem;
     }
+    button {
+      padding: 0.7rem 1.4rem;
+      margin: 1rem 0;
+      font-size: 1rem;
+      background-color: #2d2dff;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 5px 10px rgba(45, 45, 255, 0.3);
+      transition: background-color 0.3s ease;
+      font-weight: 600;
+      user-select: none;
+    }
+    button:hover {
+      background-color: #1e1ef0;
+    }
     .hidden {
       display: none;
     }
@@ -144,18 +161,177 @@
 <body>
 
 <header>
-  <div class="logo"><img src="https://img.icons8.com/color/48/book--v1.png" alt="logo" />Gyanpeeth Class 10</div>
+  <div class="logo"><img src="https://img.icons8.com/color/48/book--v1.png" alt="logo" />Gyanpeeth Class 9</div>
   <a class="back-link" href="dashboard.html">← Back</a>
 </header>
 
 <main>
-  <h2 id="main-title">Coming Soon</h2>
+  <h2 id="main-title">Select Subject</h2>
+
+  <button id="back-to-subjects" onclick="goBackToSubjects()" class="hidden">← Back to Subjects</button>
+  <button id="back-to-types" onclick="goBackToTypes()" class="hidden">← Back to Content Types</button>
+
+  <div id="subject-list" class="grid">
+    <div class="card" onclick="selectSubject('English')">
+      <img src="https://img.icons8.com/color/96/literature.png" alt="English" />
+      <span>English</span>
+    </div>
+    <div class="card" onclick="selectSubject('Nepali')">
+      <img src="https://img.icons8.com/color/96/books.png" alt="Nepali" />
+      <span>Nepali</span>
+    </div>
+    <div class="card" onclick="selectSubject('Mathematics')">
+      <img src="https://img.icons8.com/color/96/calculator.png" alt="Mathematics" />
+      <span>Mathematics</span>
+    </div>
+    <div class="card" onclick="selectSubject('Science')">
+      <img src="https://img.icons8.com/color/96/microscope.png" alt="Science" />
+      <span>Science</span>
+    </div>
+    <div class="card" onclick="selectSubject('Social')">
+      <img src="https://img.icons8.com/color/96/globe--v1.png" alt="Social" />
+      <span>Social</span>
+    </div>
+  </div>
+
+  <div id="content-type-list" class="grid hidden"></div>
+  <div id="chapter-list" class="grid hidden"></div>
+  <div id="pdf-viewer" class="hidden" style="margin-top: 2rem;">
+    <button onclick="closePDF()" style="margin-bottom: 1rem;">← Back</button>
+    <iframe id="pdf-frame" width="100%" height="600px" style="border: none;"></iframe>
+  </div>
 </main>
 
 <footer>
   <p>&copy; 2025 Gyanpeeth. All rights reserved.</p>
 </footer>
 
+<script>
+  const subjects = ['English', 'Nepali', 'Mathematics', 'Science', 'Social'];
+  const contentTypes = [
+    'Textbook',
+    'Chapter-wise Notes',
+    'Chapter-wise Video Lectures',
+    'Chapter-wise Questions',
+    'Chapter-wise Solutions'
+  ];
+  const chapters = [
+    'Chapter 1: Introduction',
+    'Chapter 2: Basic Concepts',
+    'Chapter 3: Practice',
+    'Chapter 4: Summary',
+    'Chapter 5: Revision'
+  ];
+
+  let selectedSubject = '';
+  let selectedContentType = '';
+
+  function selectSubject(subject) {
+    selectedSubject = subject;
+    document.getElementById('main-title').innerText = `${subject} – Select Content Type`;
+    document.getElementById('subject-list').classList.add('hidden');
+    document.getElementById('back-to-subjects').classList.remove('hidden');
+
+    const container = document.getElementById('content-type-list');
+    container.innerHTML = '';
+
+    contentTypes.forEach(type => {
+      const div = document.createElement('div');
+      div.className = 'card';
+
+      if (type === 'Textbook') {
+        div.innerHTML = `<span>${type}</span>`;
+        div.style.cursor = 'pointer';
+
+        const textbookLinks = {
+        'Mathematics': 'https://drive.google.com/file/d/1CpZ1O5bPxk4udA5DaHcATsr86ypg-hU9/preview',
+  'English': 'https://drive.google.com/file/d/147e8DkSzw7kS0qJ9qpAjYijQXEPJ1lsw/preview',
+  'Nepali': 'https://drive.google.com/file/d/1yHRyqrDHWsYCD1M_CDCgjleRJxiqdevw/preview',
+  'Science': 'https://drive.google.com/file/d/1NFSCPp53kudbZU-RlKhD2BoyKdz4CO7J/preview',
+  'Social': 'https://drive.google.com/file/d/141q3gk-eMt-AgD1ppI8EM-mMbgcAiusV/preview'
+};
+        const driveLink = textbookLinks[subject];
+
+        div.onclick = () => {
+          if (driveLink) {
+            showPDF(driveLink);
+          } else {
+            alert(`No textbook available for ${subject}.`);
+          }
+        };
+      } else {
+        div.innerHTML = `<span>${type}</span>`;
+        div.onclick = () => selectContentType(type);
+      }
+
+      container.appendChild(div);
+    });
+
+    container.classList.remove('hidden');
+    document.getElementById('chapter-list').classList.add('hidden');
+    document.getElementById('back-to-types').classList.add('hidden');
+  }
+
+  function selectContentType(type) {
+    selectedContentType = type;
+
+    document.getElementById('main-title').innerText = `${selectedSubject} – ${type} – Chapters`;
+    document.getElementById('content-type-list').classList.add('hidden');
+    document.getElementById('back-to-types').classList.remove('hidden');
+
+    const container = document.getElementById('chapter-list');
+    container.innerHTML = '';
+    chapters.forEach((chapter, index) => {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerText = chapter;
+      div.onclick = () => {
+        const subject = selectedSubject.toLowerCase();
+        const typeSlug = selectedContentType.toLowerCase().replace(/ /g, '-');
+        const chapterPage = `content/${subject}/${typeSlug}/chapter${index + 1}.html`;
+        window.location.href = chapterPage;
+      };
+      container.appendChild(div);
+    });
+    container.classList.remove('hidden');
+  }
+
+  function showPDF(link) {
+    document.getElementById("pdf-frame").src = link;
+    document.getElementById("pdf-viewer").classList.remove("hidden");
+    document.getElementById("subject-list").classList.add("hidden");
+    document.getElementById("content-type-list").classList.add("hidden");
+    document.getElementById("chapter-list").classList.add("hidden");
+    document.getElementById("back-to-subjects").classList.add("hidden");
+    document.getElementById("back-to-types").classList.add("hidden");
+    document.getElementById("main-title").innerText = "Textbook Viewer";
+  }
+
+  function closePDF() {
+    document.getElementById("pdf-viewer").classList.add("hidden");
+    document.getElementById("pdf-frame").src = "";
+    document.getElementById("subject-list").classList.remove("hidden");
+    document.getElementById("main-title").innerText = "Select Subject";
+  }
+
+  function goBackToSubjects() {
+    document.getElementById('main-title').innerText = 'Select Subject';
+    document.getElementById('subject-list').classList.remove('hidden');
+    document.getElementById('content-type-list').classList.add('hidden');
+    document.getElementById('chapter-list').classList.add('hidden');
+    document.getElementById('pdf-viewer').classList.add('hidden');
+    document.getElementById('back-to-subjects').classList.add('hidden');
+    document.getElementById('back-to-types').classList.add('hidden');
+  }
+
+  function goBackToTypes() {
+    document.getElementById('main-title').innerText = `${selectedSubject} – Select Content Type`;
+    document.getElementById('content-type-list').classList.remove('hidden');
+    document.getElementById('chapter-list').classList.add('hidden');
+    document.getElementById('pdf-viewer').classList.add('hidden');
+    document.getElementById('back-to-types').classList.add('hidden');
+  }
+</script>
+
 </body>
 </html>
-

@@ -1,86 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Login – Gyanpeeth</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
-      background: #f0f2f5;
       font-family: Arial, sans-serif;
+      background: #f0f2f5;
       display: flex;
+      height: 100vh;
       justify-content: center;
       align-items: center;
-      height: 100vh;
     }
+
     .login-box {
       background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    h2 {
-      color: #2d2dff;
-    }
+
     input {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    button {
+      display: block;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
       width: 100%;
-      padding: 12px;
-      background-color: #2d2dff;
+    }
+
+    button {
+      background: #2d2dff;
       color: white;
       border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      margin-top: 15px;
+      padding: 0.5rem 1rem;
       cursor: pointer;
-    }
-    button:hover {
-      background-color: #1e1ef0;
-    }
-    a {
-      display: block;
-      margin-top: 15px;
-      color: #2d2dff;
-      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
+
   <div class="login-box">
-    <h2>Login</h2>
-    <input type="email" id="login-email" placeholder="Email" required>
-    <input type="password" id="login-password" placeholder="Password" required>
+    <h2>Login to Gyanpeeth</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
     <button onclick="login()">Login</button>
-    <a href="signup.html">Don't have an account? Sign up</a>
   </div>
 
-  <script type="module" src="firebase.js"></script>
-  <script type="module">
-    import { auth } from './firebase.js';
-    import { signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+  <script>
+    function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
 
-    window.login = function () {
-      const email = document.getElementById('login-email').value;
-      const password = document.getElementById('login-password').value;
+      if (username === "admin" && password === "1234") {
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Invalid credentials. Try again.");
+      }
+    }
 
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          alert('Login successful! Redirecting...');
-          window.location.href = 'dashboard.html'; // Create this later
-        })
-        .catch(error => {
-          alert('Error: ' + error.message);
-        });
+    // If already logged in, redirect automatically
+    if (localStorage.getItem("isLoggedIn")) {
+      window.location.href = "dashboard.html";
     }
   </script>
+
 </body>
 </html>
-

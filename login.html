@@ -2,79 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login – Gyanpeeth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Gyanpeeth</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #dfe9f3, #ffffff);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background: linear-gradient(to right, #667eea, #764ba2);
       margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
     }
-
-    .login-container {
+    .container {
       background: white;
-      padding: 2rem 2.5rem;
+      padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 360px;
       text-align: center;
-      width: 320px;
     }
-
     h2 {
-      color: #2d2dff;
+      color: #333;
       margin-bottom: 1.5rem;
     }
-
     input {
       width: 100%;
       padding: 0.75rem;
       margin: 0.5rem 0;
-      border-radius: 8px;
       border: 1px solid #ccc;
-      font-size: 1rem;
+      border-radius: 6px;
     }
-
-    .checkbox {
-      text-align: left;
-      margin: 0.5rem 0 1rem;
-      font-size: 0.9rem;
-    }
-
     button {
       width: 100%;
       padding: 0.75rem;
-      background-color: #2d2dff;
+      background-color: #667eea;
       color: white;
       border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
+      border-radius: 6px;
+      font-weight: bold;
       cursor: pointer;
-      margin-bottom: 1rem;
+      margin-top: 1rem;
     }
-
     button:hover {
-      background-color: #1f1fdd;
+      background-color: #5a67d8;
     }
-
-    .google-btn {
-      background: #ffffff;
-      color: #444;
-      border: 1px solid #ccc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .google-btn img {
-      height: 20px;
-    }
-
     .error {
       color: red;
       font-size: 0.9rem;
@@ -84,81 +58,58 @@
 </head>
 <body>
 
-<div class="login-container">
-  <h2>Login to Gyanpeeth</h2>
+  <div class="container">
+    <h2>Login to Gyanpeeth</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <div id="error" class="error"></div>
+  </div>
 
-  <form id="loginForm">
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="Password" required />
-    
-    <div class="checkbox">
-      <label><input type="checkbox" id="rememberMe" /> Remember Me</label>
-    </div>
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    <button type="submit">Login</button>
-  </form>
+    // ✅ Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyATczaHTtHh_84Lt9kVykHWmSJzxHAY3Dw",
+      authDomain: "gyanpeeth-77039.firebaseapp.com",
+      projectId: "gyanpeeth-77039",
+      storageBucket: "gyanpeeth-77039.appspot.com",
+      messagingSenderId: "584911737233",
+      appId: "1:584911737233:web:4c9fd8a65bf9a39dc70a30",
+      measurementId: "G-B7HCHPFNGZ"
+    };
 
-  <button class="google-btn" onclick="loginWithGoogle()">
-    <img src="https://img.icons8.com/color/48/google-logo.png" alt="Google logo" />
-    Login with Google
-  </button>
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-  <div id="errorMsg" class="error"></div>
-</div>
+    // Login function
+    window.login = function () {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorBox = document.getElementById("error");
 
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+      errorBox.textContent = "";
 
-<script>
-  const firebaseConfig = {
-const firebaseConfig = {
-  apiKey: "AIzaSyATczaHTtHh_84Lt9kVykHWmSJzxHAY3Dw",
-  authDomain: "gyanpeeth-77039.firebaseapp.com",
-  projectId: "gyanpeeth-77039",
-  storageBucket: "gyanpeeth-77039.appspot.com",  // ✅ fixed
-  messagingSenderId: "584911737233",
-  appId: "1:584911737233:web:4c9fd8a65bf9a39dc70a30",
-  measurementId: "G-B7HCHPFNGZ"
-};
+      if (!email || !password) {
+        errorBox.textContent = "Please fill in both fields.";
+        return;
+      }
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-
-  const loginForm = document.getElementById('loginForm');
-  const errorMsg = document.getElementById('errorMsg');
-  const rememberMe = document.getElementById('rememberMe');
-
-  loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = loginForm.email.value;
-    const password = loginForm.password.value;
-
-    const persistence = rememberMe.checked
-      ? firebase.auth.Auth.Persistence.LOCAL
-      : firebase.auth.Auth.Persistence.SESSION;
-
-    auth.setPersistence(persistence).then(() => {
-      return auth.signInWithEmailAndPassword(email, password);
-    }).then(() => {
-      window.location.href = "dashboard.html";
-    }).catch((error) => {
-      errorMsg.innerText = error.message;
-    });
-  });
-
-  function loginWithGoogle() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider)
-      .then(() => {
-        window.location.href = "dashboard.html";
-      })
-      .catch((error) => {
-        errorMsg.innerText = error.message;
-      });
-  }
-</script>
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          // Redirect to dashboard after login
+          window.location.href = "dashboard.html";
+        })
+        .catch((error) => {
+          errorBox.textContent = "Login failed: " + error.message;
+        });
+    };
+  </script>
 
 </body>
 </html>

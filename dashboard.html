@@ -19,13 +19,23 @@
       color: white;
       padding: 1rem 2rem;
       display: flex;
-      justify-content: flex-start; /* since logout btn is removed, align left */
+      justify-content: space-between;
       align-items: center;
     }
 
     .logo {
       font-size: 1.5rem;
       font-weight: bold;
+    }
+
+    .logout-btn {
+      background: white;
+      color: #2d2dff;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
     }
 
     main {
@@ -79,6 +89,7 @@
 
   <header>
     <div class="logo">Gyanpeeth Dashboard</div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
   </header>
 
   <main>
@@ -97,11 +108,10 @@
   </footer>
 
   <script>
-    window.onload = function() {
-      if (!localStorage.getItem("isLoggedIn")) {
-        window.location.href = "login.html";
-      }
-    };
+    function logout() {
+    localStorage.removeItem("isLoggedIn");
+    window.location.href = "login.html";
+  }
   </script>
 
 </body>

@@ -108,13 +108,17 @@
   </footer>
 
   <script>
+    // 🚨 Ensure only logged-in users can access dashboard
+    if (!localStorage.getItem("isLoggedIn")) {
+      window.location.href = "login.html";
+    }
+
     function logout() {
-      alert("Logout functionality coming soon!");
-      // Later: Use Firebase auth signOut()
-      // signOut(auth).then(() => window.location.href = 'login.html');
+      localStorage.removeItem("isLoggedIn");
+      alert("You have been logged out.");
+      window.location.href = "login.html";
     }
   </script>
 
 </body>
 </html>
-

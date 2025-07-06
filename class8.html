@@ -230,26 +230,31 @@
 
     const container = document.getElementById('content-type-list');
     container.innerHTML = '';
+
     contentTypes.forEach(type => {
       const div = document.createElement('div');
       div.className = 'card';
 
-      // If Textbook, open google drive link directly
-      if(type === 'Textbook'){
+      if (type === 'Textbook') {
         div.innerHTML = `<span>${type}</span>`;
         div.style.cursor = 'pointer';
 
-        // You can customize the link per subject here if you want
-        let driveLink = '';
+        const textbookLinks = {
+          'Mathematics': 'https://drive.google.com/file/d/15IiMN29Dn3lK2GRrD2CJfScxfXjTnNxO/view?usp=sharing',
+          'English': 'https://drive.google.com/file/d/16U3ql8p-bzswYQ_fUB3yKRgYepk3awVm/view?usp=sharing',
+          'Nepali': 'https://drive.google.com/file/d/1VhWXN5D6qBQx1REalFLXFlvRHJJTwebD/view?usp=sharing',
+          'Science': 'https://drive.google.com/file/d/1mOY7RSw_1cAX9UMfJMd9ZlZ2WKzUoluJ/view?usp=sharing',
+          'Social': 'https://drive.google.com/file/d/1-qzA9cru-kidQDK9Kn2hRK6iEsbkRDkO/view?usp=sharing'
+        };
 
-        if(subject === 'Mathematics'){
-          driveLink = 'https://drive.google.com/file/d/15IiMN29Dn3lK2GRrD2CJfScxfXjTnNxO/view?usp=sharing';
-        } else {
-          driveLink = 'https://drive.google.com'; // fallback or other subject links
-        }
+        const driveLink = textbookLinks[subject];
 
         div.onclick = () => {
-          window.open(driveLink, '_blank');
+          if (driveLink) {
+            window.open(driveLink, '_blank');
+          } else {
+            alert(`No textbook available for ${subject}.`);
+          }
         };
       } else {
         div.innerHTML = `<span>${type}</span>`;
@@ -258,54 +263,35 @@
 
       container.appendChild(div);
     });
+
     container.classList.remove('hidden');
     document.getElementById('chapter-list').classList.add('hidden');
     document.getElementById('back-to-types').classList.add('hidden');
   }
 
   function selectContentType(type) {
-  selectedContentType = type;
+    selectedContentType = type;
 
-  // If it's textbook and Mathematics is selected
-  if (type === 'Textbook') {
-  const textbookLinks = {
-    'Mathematics': 'https://drive.google.com/file/d/15IiMN29Dn3lK2GRrD2CJfScxfXjTnNxO/view?usp=sharing',
-    'English': 'https://drive.google.com/file/d/16U3ql8p-bzswYQ_fUB3yKRgYepk3awVm/view?usp=sharing',
-    'Nepali': 'https://drive.google.com/file/d/1VhWXN5D6qBQx1REalFLXFlvRHJJTwebD/view?usp=sharing',
-    'Science': 'https://drive.google.com/file/d/1mOY7RSw_1cAX9UMfJMd9ZlZ2WKzUoluJ/view?usp=sharing',
-    'Social': 'https://drive.google.com/file/d/1-qzA9cru-kidQDK9Kn2hRK6iEsbkRDkO/view?usp=sharing'
-  };
+    document.getElementById('main-title').innerText = `${selectedSubject} – ${type} – Chapters`;
+    document.getElementById('content-type-list').classList.add('hidden');
+    document.getElementById('back-to-types').classList.remove('hidden');
 
-  const link = textbookLinks[selectedSubject];
-  if (link) {
-    window.open(link, '_blank');
-  } else {
-    alert(`No textbook link available for ${selectedSubject}.`);
+    const container = document.getElementById('chapter-list');
+    container.innerHTML = '';
+    chapters.forEach((chapter, index) => {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerText = chapter;
+      div.onclick = () => {
+        const subject = selectedSubject.toLowerCase();
+        const typeSlug = selectedContentType.toLowerCase().replace(/ /g, '-');
+        const chapterPage = `content/${subject}/${typeSlug}/chapter${index + 1}.html`;
+        window.location.href = chapterPage;
+      };
+      container.appendChild(div);
+    });
+    container.classList.remove('hidden');
   }
-  return;
-}
-
-
-  document.getElementById('main-title').innerText = `${selectedSubject} – ${type} – Chapters`;
-  document.getElementById('content-type-list').classList.add('hidden');
-  document.getElementById('back-to-types').classList.remove('hidden');
-
-  const container = document.getElementById('chapter-list');
-  container.innerHTML = '';
-  chapters.forEach((chapter, index) => {
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.innerText = chapter;
-    div.onclick = () => {
-      const subject = selectedSubject.toLowerCase();
-      const typeSlug = selectedContentType.toLowerCase().replace(/ /g, '-');
-      const chapterPage = `content/${subject}/${typeSlug}/chapter${index + 1}.html`;
-      window.location.href = chapterPage;
-    };
-    container.appendChild(div);
-  });
-  container.classList.remove('hidden');
-}
 
   function goBackToSubjects() {
     document.getElementById('main-title').innerText = 'Select Subject';

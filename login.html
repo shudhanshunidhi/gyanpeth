@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #dce3f0, #8e9eab);
+      background: linear-gradient(135deg, #dfe9f3, #ffffff);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -17,53 +17,68 @@
 
     .login-container {
       background: white;
-      padding: 2rem;
+      padding: 2rem 2.5rem;
       border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
       text-align: center;
+      width: 320px;
     }
 
     h2 {
-      margin-bottom: 1.5rem;
       color: #2d2dff;
+      margin-bottom: 1.5rem;
     }
 
     input {
       width: 100%;
       padding: 0.75rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ccc;
+      margin: 0.5rem 0;
       border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
     }
 
-    .remember-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
+    .checkbox {
+      text-align: left;
+      margin: 0.5rem 0 1rem;
+      font-size: 0.9rem;
     }
 
-    .login-btn {
+    button {
       width: 100%;
-      padding: 0.8rem;
+      padding: 0.75rem;
       background-color: #2d2dff;
       color: white;
       border: none;
       border-radius: 8px;
-      font-weight: bold;
+      font-size: 1rem;
+      font-weight: 600;
       cursor: pointer;
+      margin-bottom: 1rem;
     }
 
-    .login-btn:hover {
-      background-color: #1e1ef0;
+    button:hover {
+      background-color: #1f1fdd;
+    }
+
+    .google-btn {
+      background: #ffffff;
+      color: #444;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .google-btn img {
+      height: 20px;
     }
 
     .error {
       color: red;
       font-size: 0.9rem;
-      margin-bottom: 1rem;
+      margin-top: 0.5rem;
     }
   </style>
 </head>
@@ -71,16 +86,24 @@
 
 <div class="login-container">
   <h2>Login to Gyanpeeth</h2>
-  <input type="email" id="email" placeholder="Email" />
-  <input type="password" id="password" placeholder="Password" />
-  
-  <div class="remember-row">
-    <label><input type="checkbox" id="rememberMe" /> Remember Me</label>
-  </div>
 
-  <div class="error" id="error-msg"></div>
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    
+    <div class="checkbox">
+      <label><input type="checkbox" id="rememberMe" /> Remember Me</label>
+    </div>
 
-  <button class="login-btn" onclick="login()">Login</button>
+    <button type="submit">Login</button>
+  </form>
+
+  <button class="google-btn" onclick="loginWithGoogle()">
+    <img src="https://img.icons8.com/color/48/google-logo.png" alt="Google logo" />
+    Login with Google
+  </button>
+
+  <div id="errorMsg" class="error"></div>
 </div>
 
 <!-- Firebase SDKs -->
@@ -88,8 +111,8 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
 <script>
-  // Firebase config (your project)
   const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyATczaHTtHh_84Lt9kVykHWmSJzxHAY3Dw",
   authDomain: "gyanpeeth-77039.firebaseapp.com",
   projectId: "gyanpeeth-77039",
@@ -99,40 +122,39 @@
   measurementId: "G-B7HCHPFNGZ"
 };
 
+  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
 
-  // Auto-fill email if Remember Me was checked before
-  window.onload = () => {
-    const savedEmail = localStorage.getItem("rememberedEmail");
-    if (savedEmail) {
-      document.getElementById("email").value = savedEmail;
-      document.getElementById("rememberMe").checked = true;
-    }
-  };
+  const loginForm = document.getElementById('loginForm');
+  const errorMsg = document.getElementById('errorMsg');
+  const rememberMe = document.getElementById('rememberMe');
 
-  function login() {
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const rememberMe = document.getElementById("rememberMe").checked;
-    const errorMsg = document.getElementById("error-msg");
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = loginForm.email.value;
+    const password = loginForm.password.value;
 
-    errorMsg.innerText = "";
+    const persistence = rememberMe.checked
+      ? firebase.auth.Auth.Persistence.LOCAL
+      : firebase.auth.Auth.Persistence.SESSION;
 
-    auth.signInWithEmailAndPassword(email, password)
-      .then(userCredential => {
-        if (rememberMe) {
-          localStorage.setItem("rememberedEmail", email);
-        } else {
-          localStorage.removeItem("rememberedEmail");
-        }
+    auth.setPersistence(persistence).then(() => {
+      return auth.signInWithEmailAndPassword(email, password);
+    }).then(() => {
+      window.location.href = "dashboard.html";
+    }).catch((error) => {
+      errorMsg.innerText = error.message;
+    });
+  });
 
-        // Optional: Set flag for login status
-        localStorage.setItem("isLoggedIn", "true");
-
+  function loginWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+      .then(() => {
         window.location.href = "dashboard.html";
       })
-      .catch(error => {
+      .catch((error) => {
         errorMsg.innerText = error.message;
       });
   }

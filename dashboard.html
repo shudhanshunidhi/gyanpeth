@@ -108,14 +108,13 @@
   </footer>
 
   <script>
-    // 🚨 Ensure only logged-in users can access dashboard
+    // Redirect to login if not logged in
     if (!localStorage.getItem("isLoggedIn")) {
       window.location.href = "login.html";
     }
 
     function logout() {
       localStorage.removeItem("isLoggedIn");
-      alert("You have been logged out.");
       window.location.href = "login.html";
     }
   </script>
